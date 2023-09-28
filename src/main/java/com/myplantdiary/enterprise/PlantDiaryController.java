@@ -2,14 +2,20 @@ package com.myplantdiary.enterprise;
 
 
 import com.myplantdiary.enterprise.dto.Specimen;
+import com.myplantdiary.enterprise.service.ISpecimenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PlantDiaryController {
+
+    @Autowired
+    ISpecimenService specimenService;
 
     /**
      * Handle the root (/) endpoint and return a start page
@@ -18,12 +24,26 @@ public class PlantDiaryController {
      */
 
     @RequestMapping("/")
-    public String index() {
-
+    public String index(Model model) {
+        Specimen specimen = new Specimen();
+        specimen.setDescription("Pawpaw fruit season");
+        specimen.setLatitude("39.74");
+        specimen.setLongitude("-84.51");
+        specimen.setSpecimenId("1003");
+        specimen.setPlantId(84);
+        model.addAttribute(specimen);
 
         return "start";
 
     }
+
+
+    @RequestMapping("/saveSpecimen")
+    public String saveSpecimen(Specimen specimen){
+        specimenService.save(specimen);
+        return "start";
+    }
+
 
     /**
      * Endpoint to fetch specimens
